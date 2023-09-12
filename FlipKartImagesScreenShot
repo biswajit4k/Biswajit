@@ -1,0 +1,67 @@
+package com.trello.qspiders.screenshot;
+
+import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class TakeScreenshotFlipkart {
+
+	WebDriver driver;
+	String timeStamp;
+
+	@BeforeMethod
+	public void configureBeforeMethod() {
+		String browserName = "chrome";
+		String url = "https://www.flipkart.com/";
+		if (browserName.equals("edge")) {
+			driver = new EdgeDriver();
+		} else if (browserName.equals("chrome")) {
+			driver = new ChromeDriver();
+		} else if (browserName.equals("firefox")) {
+			driver = new FirefoxDriver();
+		}
+
+		driver.manage().window().maximize();
+		driver.get(url);
+	}
+
+	@AfterMethod
+	public void configureAfterMethod() {
+		driver.manage().window().minimize();
+		driver.quit();
+	}
+
+	@Test
+	public void flipkartImage() throws Throwable {
+		int i = 0;
+		ArrayList<String> imageText = new ArrayList<String>();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.findElement(By.xpath("//button[text()='✕']")).click();
+		List<WebElement> image = driver.findElements(By.xpath("//img[@loading='lazy']"));
+		List<WebElement> textFlipkart = driver.findElements(By.xpath("//div[@class='xtXmba']"));
+		for (WebElement eachText : textFlipkart) {
+			imageText.add(eachText.getText());
+		}
+
+		for (WebElement flipkartImg : image) {
+			Thread.sleep(1000);
+			File destFile = new File(
+					"./defectShot/ " + imageText.get(i++) + LocalDateTime.now().toString().replace(':', '-') + ".png");
+			FileUtils.copyFile(flipkartImg.getScreenshotAs(OutputType.FILE), destFile);
+		}
+	}
+}
