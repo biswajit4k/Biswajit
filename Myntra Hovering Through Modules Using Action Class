@@ -1,0 +1,128 @@
+package com.trello.qspiders.actionclass;
+
+import java.time.Duration;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.testng.Reporter;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class ActionOnMenSection {
+
+	WebDriver driver;
+
+	@BeforeMethod
+	public void configBeforeMethod() {
+		String browserName = "edge";
+		String url = "https://www.myntra.com/";
+		if (browserName.equals("edge")) {
+			driver = new EdgeDriver();
+		}
+		Reporter.log("Browser launched successfully.");
+		driver.manage().window().maximize();
+		driver.get(url);
+		Reporter.log("Url is triggered.");
+	}
+
+	@AfterMethod
+	public void configureAfterMethod() {
+		driver.manage().window().minimize();
+		driver.quit();
+		Reporter.log("Session terminated successfully.");
+	}
+
+	@Test(priority = 1)
+	public void visitMenSectionOptions() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		Actions actions = new Actions(driver);
+		WebElement menNavigation = driver.findElement(By.xpath("//div[@class='desktop-navLinks']//a[text()='Men']"));
+		actions.moveToElement(menNavigation).perform();
+		List<WebElement> menNavOptions = driver
+				.findElements(By.xpath("//div[@data-group='men']//a[@class='desktop-categoryLink']"));
+		for (WebElement menOptions : menNavOptions) {
+			actions.moveToElement(menOptions).pause(500).perform();
+		}
+	}
+
+	@Test(priority = 2)
+	public void visitWomenSectionOptions() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		Actions actions = new Actions(driver);
+		WebElement womenNavigation = driver
+				.findElement(By.xpath("//div[@class='desktop-navLinks']//a[text()='Women']"));
+		actions.moveToElement(womenNavigation).perform();
+		List<WebElement> womenNavOptions = driver
+				.findElements(By.xpath("//div[@data-group='women']//a[@class='desktop-categoryLink']"));
+		for (WebElement womenOptions : womenNavOptions) {
+			actions.moveToElement(womenOptions).pause(500).perform();
+		}
+	}
+
+	@Test(priority = 3)
+	public void visitKidsSectionOptions() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		Actions actions = new Actions(driver);
+		WebElement kidsNavigation = driver.findElement(By.xpath("//div[@class='desktop-navLinks']//a[text()='Kids']"));
+		actions.moveToElement(kidsNavigation).perform();
+		List<WebElement> kidsNavOptions = driver
+				.findElements(By.xpath("//div[@data-group='kids']//a[@class='desktop-categoryLink']"));
+		for (WebElement kidsOptions : kidsNavOptions) {
+			actions.moveToElement(kidsOptions).pause(500).perform();
+		}
+	}
+
+	@Test(priority = 4)
+	public void visitHomeLivingSectionOptions() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		Actions actions = new Actions(driver);
+		WebElement halNavigation = driver
+				.findElement(By.xpath("//div[@class='desktop-navLinks']//a[text()='Home & Living']"));
+		actions.moveToElement(halNavigation).perform();
+		List<WebElement> halNavOptions = driver
+				.findElements(By.xpath("//div[@data-group='home-&-living']//a[@class='desktop-categoryLink']"));
+		for (WebElement halOptions : halNavOptions) {
+			actions.moveToElement(halOptions).pause(500).perform();
+		}
+	}
+
+	@Test(priority = 5)
+	public void visitBeautySectionOptions() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		Actions actions = new Actions(driver);
+		WebElement beautyNavigation = driver
+				.findElement(By.xpath("//div[@class='desktop-navLinks']//a[text()='Beauty']"));
+		actions.moveToElement(beautyNavigation).perform();
+		List<WebElement> beautyNavOptions = driver
+				.findElements(By.xpath("//div[@data-group='beauty']//a[@class='desktop-categoryLink']"));
+		for (WebElement beautyOptions : beautyNavOptions) {
+			actions.moveToElement(beautyOptions).pause(500).perform();
+		}
+	}
+
+	@Test
+	public void mouseHoveringUptoExtent() throws Throwable {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		Actions actions = new Actions(driver);
+		WebElement menSectionOnNav = driver.findElement(By.xpath("//div[@class='desktop-navLinks']//a[text()='Men']"));
+		List<WebElement> allOptions = driver.findElements(By.xpath("//a[text()='Topwear']/parent::li/following-sibling::li/a"));
+		actions.moveToElement(menSectionOnNav).perform();
+		System.out.println(allOptions.size());
+		for (WebElement option : allOptions) {
+			String attName = option.getAttribute("class");
+			System.out.println(attName);
+			if (attName.equals("desktop-categoryLink")) {
+				actions.moveToElement(option).pause(1000).perform();
+			}else if (attName.equals("desktop-categoryName")) {
+				break;
+			}
+		}
+		Thread.sleep(2000);
+	}
+
+}
